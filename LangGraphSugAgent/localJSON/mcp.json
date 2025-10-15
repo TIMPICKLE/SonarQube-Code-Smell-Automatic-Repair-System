@@ -1,0 +1,36 @@
+{
+    "mcpServers": {
+        "streamable-mcp-server": {
+            "type": "streamableHttp",
+            "url": "http://127.0.0.1:12306/mcp"
+        },
+        "azureDevOps": {
+            "type": "stdio",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "npx",
+                "-y",
+                "@tiberriver256/mcp-server-azure-devops"
+            ],
+            "env": {
+                "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/tiberriver256",
+                "AZURE_DEVOPS_AUTH_METHOD": "pat",
+                "AZURE_DEVOPS_PAT": "TimTimTReasure",
+                "AZURE_DEVOPS_DEFAULT_PROJECT": "ThisIsmy:Project"
+            }
+        },
+        "sonarqube": {
+            "command": "npx",
+            "args": [
+                "--yes",
+                "sonarqube-mcp-server@latest"
+            ],
+            "env": {
+                "SONARQUBE_URL": "http://sonar-server-01:8000",
+                "SONARQUBE_USERNAME": "Tim",
+                "SONARQUBE_PASSWORD": "TimPassword"
+            }
+        }
+    }
+}
