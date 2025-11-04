@@ -32,8 +32,19 @@ for ($i = 1; $i -le $iterationCount; $i++) {
     "[$($startTime.ToString('yyyy-MM-dd HH:mm:ss'))] Starting iteration $i" |
         Out-File -FilePath $logPath -Encoding UTF8 -Append
 
-    & $pythonExe $scriptPath
-    $exitCode = $LASTEXITCODE
+    try {
+        $process = Start-Process -FilePath $pythonExe -ArgumentList $scriptPath -Wait -PassThru -NoNewWindow -ErrorAction Stop
+        $exitCode = $process.ExitCode
+    }
+    catch {
+        $endTime = Get-Date
+        $duration = [math]::Round(($endTime - $startTime).TotalSeconds, 2)
+        $errorMessage = $_.Exception.Message
+        $message = "[$($endTime.ToString('yyyy-MM-dd HH:mm:ss'))] Iteration $i terminated by PowerShell error after ${duration} seconds: $errorMessage"
+        Write-Host $message -ForegroundColor Red
+        $message | Out-File -FilePath $logPath -Encoding UTF8 -Append
+        continue
+    }
 
     $endTime = Get-Date
     $duration = [math]::Round(($endTime - $startTime).TotalSeconds, 2)
